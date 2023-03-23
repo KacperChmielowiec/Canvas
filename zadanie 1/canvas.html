@@ -1,0 +1,106 @@
+<html>
+<head>
+	<meta charset="utf-8" />
+</head>
+<body style="box-sizing: border-box; margin: 0;" onload="init()">
+	<center>
+	<div style="display: grid; 
+		 width: 100%; 
+		 min-height: 100vh; 
+		 background-color: #e0e0e0; 
+		 margin: 0; 
+		 box-sizing: border-box; 
+		 grid-template-columns: 1fr 2fr 1fr;
+		 grid-template-rows: 1fr 3fr 1fr;
+		 align-items: center;
+		 justify-items: center;
+		 "> 
+		 
+			<div style="grid-column: 2 / span 1; grid-row: 2 / span 1; width: 100%; height: 100%; background-color: #c7c7c7; display: flex;
+				justify-content: center; align-items: center;
+			">
+				<canvas id="mycanv" style="width: 420px; height: 300px; display: block; border: 1px solid black;" ></canvas>
+				
+				</canvas>
+			
+			<div>
+	
+	</div>
+	</center>
+<script>
+	var canvas; // DOM object corresponding to the canvas
+	var graphics; // 2D graphics context for drawing on the canvas
+	
+	function draw() {
+	// draw on the canvas, using the graphics context
+		graphics.font = "13px serif";
+		graphics.fillText("Hello World", 150, 100);
+	}
+	function init() {
+	
+	// Pobierz element canvas
+		const canvas = document.getElementById("mycanv");
+		// Ustaw kontekst rysowania 2D
+		const ctx = canvas.getContext("2d");
+
+		// Oblicz połowę szerokości i wysokości płótna
+		const centerX = canvas.width / 2;
+		const centerY = canvas.height / 2;
+
+		// Ustaw długość boku rombu
+		const sideLength = 100;
+
+		// Ustaw punkty rombu
+		const pointA = [centerX, centerY - sideLength / 2.4];
+		const pointB = [centerX + sideLength / 2, centerY];
+		const pointC = [centerX, centerY + sideLength / 2.4];
+		const pointD = [centerX - sideLength / 2, centerY];
+		
+		// Ustaw kolor linii i wypełnienia
+		ctx.strokeStyle = "black"; // ciemno niebieski
+		ctx.fillStyle = "#003366"; // ciemno niebieski
+		ctx.lineWidth = 4;
+		// Narysuj romb za pomocą standardowych metod rysowania
+		ctx.beginPath();
+		ctx.moveTo(pointA[0], pointA[1]);
+		ctx.lineTo(pointB[0], pointB[1]);
+		ctx.lineTo(pointC[0], pointC[1]);
+		ctx.lineTo(pointD[0], pointD[1]);
+		ctx.closePath();
+		ctx.stroke();
+		ctx.fill();
+		
+	    ctx.fillStyle = "black"; 
+		ctx.beginPath();
+		ctx.arc(centerX, centerY - 25, sideLength / 2 - 15, 0.3 * Math.PI, 0.7 * Math.PI, false);
+		ctx.stroke();
+		ctx.fill();
+		
+		ctx.fillStyle = "#FFFFFF"; // biały
+		ctx.beginPath();
+		ctx.rect(centerX, centerY + 4, 8, 3);
+		ctx.fill();
+
+		// Narysuj białe oczy z czarnymi źrenicami
+		ctx.fillStyle = "#FFFFFF"; // biały
+		ctx.beginPath();
+		ctx.arc(centerX - 15, centerY - 10, 5, 0, 2 * Math.PI, false);
+		ctx.arc(centerX + 15, centerY - 10, 5, 0, 2 * Math.PI, false);
+		ctx.fill();
+		ctx.fillStyle = "#000000"; // czarny
+		ctx.beginPath();
+		ctx.arc(centerX - 15, centerY - 10, 3, 0, 2 * Math.PI, false);
+		ctx.arc(centerX + 15, centerY - 10, 3, 0, 2 * Math.PI, false);
+		ctx.fill();
+	}
+	
+</script>
+	
+	
+</body>
+
+
+
+
+
+</html>
