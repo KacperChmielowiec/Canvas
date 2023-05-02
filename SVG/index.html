@@ -1,0 +1,205 @@
+<html>
+<head>
+
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Website</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+	<style>
+	
+		body{width: 100%; min-height: 100vh; margin: 0; padding: 0; box-sizing: border-box;}
+		#grid{
+			 grid-template-columns: 1fr;
+			 grid-template-rows: 1fr 1.2fr;
+			 display: grid;
+			 min-height: 100%;
+			 width: 100%;
+		}
+		#grid-up{
+		
+		
+			  display: grid;
+			  grid-area: 1 / 1
+			  width: 100%;
+			  height: 100%;
+			  grid-template-columns: repeat(2,1fr);
+			  grid-template-rows: 1fr; 
+			  justify-items: center;
+			  align-items: center;
+			  
+			
+		}
+		#grid-down{
+		
+			 display: grid;
+			 grid-area: 2 / 1
+			 width: 100%;
+			 height: 100%;
+			 justify-items: center;
+			 align-items: center;
+			 
+		}
+		#svg-1{
+			 grid-area: 1 / 1
+		
+		}
+		#svg-2{
+			 grid-area: 1 / 2
+		
+		}
+	</style>
+</head>
+
+
+<body>
+<div id="grid">
+	<div id="grid-up">
+			<svg width="700px" height="400px" id="svg-1">
+				<g>
+					<polygon points="300,400 380,400 340,150" class="triangle" stroke = "black" fill="#51087E" />
+					<rect x = "200" y = "140" height = "20" width = "300" transform = "rotate (20) translate (40,-130)" fill="red" />
+				</g>
+			</svg>
+			
+			<svg width="700px" height="400px" id="svg-2">
+				<g>
+					<polygon points="300,300 340,300 320,150" class="triangle" stroke = "black" fill="green" />
+					<rect x = "200" y = "140" height = "15" width = "170" transform = "rotate (20) translate (70,-125)" fill="red" />
+				</g>
+			</svg>
+	</div>
+	<div id="grid-down">
+			<svg width="700px" height="600px" id="svg-3">
+				<g>
+					<polygon points="300,500 420,500 360,180" class="triangle" stroke = "black" fill="blue" />
+					<rect x = "200" y = "140" height = "20" width = "400" transform = "rotate (20) translate (25,-100)" fill="red" />
+				</g>
+			</svg>
+	
+	
+	</div>
+</div>
+<script>
+
+
+var NS_URI = 'http://www.w3.org/2000/svg', 
+    MAX_P = 17,
+    frag = document.createDocumentFragment();
+
+Element.prototype.setAttrs = function(attr_obj) {
+  for(var prop in attr_obj) {
+    this.setAttribute(prop, attr_obj[prop]);
+  }
+};
+
+Element.prototype.getAncestorWithClass = function(cls) {
+  var parent = this.parentNode, parent_cls;
+    
+  if(!parent) { return null; }
+  
+  parent_cls = parent.getAttribute('class');
+  if(!parent_cls || parent_cls.indexOf(cls) === -1) {
+    return parent.getAncestorWithClass(cls);
+  }
+  else { return parent; }
+};
+
+
+
+var generatePoly = function(parent,p, q, r,startX,startY) {
+  var path = document.createElementNS(NS_URI, 'path'), 
+	  group = document.createElementNS(NS_URI, 'g'), 
+      points = document.createElementNS(NS_URI, 'g'), 
+      curr_g, 
+      curr_point, 
+      base_angle = 2*Math.PI/p, 
+      angle = (Math.random() -q)*base_angle, 
+      x, y, d_attr = '';
+	
+  //const tr = "'transform='rotate(0 100 100)'><animateTransform attributeName='transform' attributeType='XML' type='rotate' dur='2s' from='0 100 100' to='360 100 100' repeatCount='indefinite'";
+  
+  for(var i = 0; i < p; i++) {
+    curr_g = document.createElementNS(NS_URI, 'g');
+    
+    angle += q*base_angle;
+    
+    x = ~~(r*Math.cos(angle))+startX;
+    y = ~~(r*Math.sin(angle))+startY;
+    
+    d_attr += 
+      ((i === 0)?'M':'L') + x + ' ' + y + ' ';
+    
+    if(i*q%p === 0 && i > 0) {
+      angle += base_angle;
+      x = ~~(r*Math.cos(angle));
+      y = ~~(r*Math.sin(angle));
+      
+      d_attr += 'M' + x + ' ' + y + ' ';
+    }
+    
+    curr_point = document.createElementNS(NS_URI, 'circle');
+    curr_point.setAttrs({
+      'class': 'p p--' + i, 
+      'cx': x, 'cy': y, 
+      'r': 3,
+	  'fill': 'red'
+    });
+    curr_g.appendChild(curr_point);
+    
+    points.appendChild(curr_g);
+  }
+  
+  d_attr += 'z'
+  
+  var tr = document.createElementNS(NS_URI, 'animateTransform'); 
+  tr.setAttrs({
+	'attributeName': 'transform',
+	'attributeType': 'XML',
+	'type': 'rotate',
+	'dur': '2s',
+	'from': `0,${startX},${startY}`,
+	'to': `360,${startX},${startY}`,
+	'repeatCount': 'indefinite'
+  });
+  
+  path.setAttribute('d', d_attr);
+  path.setAttribute('fill-rule', 'evenodd');
+  points.setAttribute('transform','rotate(0)');
+  
+  group.appendChild(points)
+  
+  group.appendChild(path)
+
+  group.appendChild(tr);	
+  parent.appendChild(group);
+  
+  
+};
+
+
+var addTests = function(MAX_P,Path,r,startX,startY,) {
+	generatePoly(Path,MAX_P,1,r,startX,startY);
+};
+
+const svgOne = document.querySelector('#svg-1 g');
+const svgTwo = document.querySelector('#svg-2 g');
+const svgTree = document.querySelector('#svg-3 g');
+
+const points1 = [{x: 250,y:110,s: 50},{x: 250,y:110, s: 30},{x: 200,y:120,s:75}];
+const points2 = [{x: 500,y:200,s: 50},{x: 400,y:170, s: 30},{x: 540,y:250,s:75}];
+
+[svgOne,svgTwo,svgTree].forEach( (svg,i) => {
+	
+		addTests(13,svg,points1[i].s,points1[i].x,points1[i].y)
+		addTests(13,svg,points2[i].s,points2[i].x,points2[i].y)
+	}
+)
+
+
+
+</script>
+</body>
+
+</hrml>
