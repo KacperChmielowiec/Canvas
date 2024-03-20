@@ -1,0 +1,1 @@
+Zadania javascript na studia 
